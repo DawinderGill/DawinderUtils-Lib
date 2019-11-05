@@ -1,18 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout>
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10sp"
+            tools:context=".MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.dawinderutilslib.rangeseekbar.MyRangeSeekBar
+                android:id="@+id/rangeSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:absoluteMaxValue="100"
+                app:absoluteMinValue="1"
+                app:activateOnDefaultValues="true"
+                app:activeColor="@color/colorPrimary"
+                app:barHeight="5dp"
+                app:defaultColor="@color/colorAccent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:showLabels="true"
+                app:singleThumb="false"
+                app:step="1"
+                app:textAboveThumbsColor="@color/colorAccent"
+                app:thumbNormal="@drawable/custom_seek_thumb"
+                app:thumbPressed="@drawable/custom_seek_thumb"
+                app:thumbShadow="true"
+                app:valuesAboveThumbs="true" />
+
+            <com.dawinderutilslib.piechart.MyPieView
+                android:id="@+id/pieView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                app:chartTextColor="@color/colorBlack"
+                app:chartTextSize="10sp"
+                app:layout_constraintTop_toBottomOf="@id/rangeSeekBar" />
+
+            <Button
+                android:id="@+id/btShowToast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:text="Show Toast"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pieView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

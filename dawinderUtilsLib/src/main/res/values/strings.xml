@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">DawinderUtilsLib</string>
+
+    <string name="gallery_permission_required">Gallery permission required to get file.</string>
+    <string name="camera_permission_required">Camera permission required to use camera.</string>
+    <string name="permission_not_granted_message">App needs all permissions to work normally.</string>
+    <string name="select_your_option">Select your option</string>
+    <string name="gallery">GALLERY</string>
+    <string name="camera">CAMERA</string>
+    <string name="failed_to_capture_image">Failed to capture image.</string>
+    <string name="failed_to_fetch">Failed to get file</string>
+    <string name="take_photo">Take Picture</string>
+    <string name="choose_image">Gallery</string>
+    <string name="location_permission_required">Location permission required.</string>
+    <string name="failed_to_get_location">Failed to get location. Please try after some time.</string>
+    <string name="location_setting_unavailable">Location setting unavailable.</string>
+    <string name="ok">OK</string>
+    <string name="turn_on_gps">To get access for full functionality of app please turn on your gps.</string>
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
 </resources>
