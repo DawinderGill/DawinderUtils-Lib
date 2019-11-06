@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyUtils-Lib</string>
+
+    <string name="google_maps_key">AIzaSyAFBbr5NyncKu544Bj3_QoisBrw8yX-Ois</string>
 </resources>
