@@ -26,6 +26,8 @@ object MyImagePicker {
     private const val REQUEST_CODE_GALLERY = 1001
     private const val REQUEST_CODE_CAMERA = 1002
     private lateinit var listener: OnImagePick
+    private var isGallery: Boolean = true
+    private var isCamera: Boolean = true
 
     object dialogListener : OnDialogOptionSelected {
         override fun onDialogOptionSelected(mContext: Context, isGallery: Boolean) {
@@ -34,13 +36,29 @@ object MyImagePicker {
         }
     }
 
+    fun disableGallery(): MyImagePicker {
+        isGallery = false
+        return this
+    }
+
+    fun disableCamera(): MyImagePicker {
+        isCamera = false
+        return this
+    }
+
     @SuppressLint("NewApi")
     fun selectImage(mContext: Context, listener: OnImagePick) {
         this.listener = listener
 
-        val dialog = ImagePickerDialog()
-        dialog.setData(mContext, dialogListener)
-        dialog.show((mContext as AppCompatActivity).supportFragmentManager, dialog.tag)
+        if ((isCamera && isGallery) || (!isCamera && !isGallery)) {
+            val dialog = ImagePickerDialog()
+            dialog.setData(mContext, dialogListener)
+            dialog.show((mContext as AppCompatActivity).supportFragmentManager, dialog.tag)
+        } else if (isCamera) {
+            gotoCamera(mContext)
+        } else {
+            gotoGallery(mContext)
+        }
     }
 
     private fun getGalleryPermission(mContext: Context) {
