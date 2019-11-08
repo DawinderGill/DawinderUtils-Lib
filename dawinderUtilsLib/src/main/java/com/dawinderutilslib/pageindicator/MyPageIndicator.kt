@@ -21,12 +21,11 @@ class MyPageIndicator(private var mContext: Context) : ViewPager.OnPageChangeLis
      *
      * @param viewPager ViewPager with you want to like this page indicator
      * @param llPagerDots LinearLayout in which you want to add this indicator dots
-     * @param dotsCount Count of indicator dots (Basically ViewPager items count)
      */
-    fun ini(viewPager: ViewPager, llPagerDots: LinearLayout, dotsCount: Int): MyPageIndicator {
+    fun ini(viewPager: ViewPager, llPagerDots: LinearLayout): MyPageIndicator {
         this.viewPager = viewPager
         this.llPagerDots = llPagerDots
-        this.dotsCount = dotsCount
+        this.dotsCount = viewPager.adapter!!.count
         return this
     }
 

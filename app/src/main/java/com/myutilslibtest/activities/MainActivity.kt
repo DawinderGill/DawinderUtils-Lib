@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setPieChart()
         setCommonAdapter()
-        setMap()
+        setUpMap()
         setViewPager()
 
         binding.btShowToast.setOnClickListener {
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         adapter.submitList(list)
     }
 
-    private fun setMap() {
+    private fun setUpMap() {
         val mSupportMapFragment =
             supportFragmentManager.findFragmentById(R.id.map) as MyMapView
         mSupportMapFragment.setListener(object : MyMapView.OnTouchListener {
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         list.add("https://previews.123rf.com/images/mrcmos/mrcmos1409/mrcmos140900010/31616208-pair-of-colorful-beach-chair-with-sun-umbrella-on-beautiful-beach-concept-for-rest-relaxation-and-ho.jpg")
         binding.viewPager.adapter = ViewPagerAdapter(mContext, list)
         MyPageIndicator(mContext)
-            .ini(binding.viewPager, binding.llIndicator, list.size)
+            .ini(binding.viewPager, binding.llIndicator)
             .setDrawable(R.drawable.custom_dot_selected, R.drawable.custom_dot_unselected)
             .build()
     }
