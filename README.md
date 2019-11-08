@@ -7,26 +7,47 @@ Current Version : 1.4
 
 Library Includes
 --------------
+
 **1. Range seek bar**
+
     Custom range seek bar in which you can customize seek bar thumbs, bar color, text color and many more without using any third party library.
+
 **2. Pie graph**
+
     Create circular pie chat without any third party library in which you can divide circular chart with different percentage and colors.
+
 **3. Common RecyclerView adapter**
+
     Forgot about creating different classes for different recyclerview adapters. Thanks to **Data Binding**.
+
 **4. Add map in scroll view**
+
     You can add google map view in scrollview without any zooming issue.
+
 **5. Custom page indicator**
+
     Add page indicator to the view pager without using any library. You can add your custom drawable in selected and unselected dots of page indicator.
+
 **6. Some basic methods**
+
     This is one of the most useful class. In which added some basic methods which we need in most of our android projects. Like check internet connection, get current date, load image etc.
+
 **7. Zoom image**
+
     A simple pinch-to-zoom ImageView for Android with an emphasis on a smooth and natural feel.
+
 **8. Get any permission**
-    You can get multiple permissions at one time with the help of this class.
+
+    You can get multile permissions at one time with the help of this class.
+
 **9. Location picker**
+
     Easy way to get device location. This class will handle all things needed to get location of device like permission, check GPS etc.
+
 **10. Image picker**
+
     Easy to way get image from device storage or capture image from camera. There is ability to disable gallery or camera option.
+
 
 Download
 --------
@@ -66,6 +87,7 @@ Or Maven:
 How do I use this library?
 -----------------------
 **1. Range seek bar**
+
     Custom range seek bar in which you can customize seek bar thumbs, bar color, text color and many more without using any third party library.
 
 ```java
@@ -90,8 +112,9 @@ How do I use this library?
 ```
 
 **2. Pie graph**
+
     Create circular pie chat without any third party library in which you can divide circular chart with different percentage and colors.
-    
+
 ```java
 1. Add 'MyPieView' in xml
 
@@ -102,7 +125,7 @@ How do I use this library?
     android:layout_margin="10sp"
     app:chartTextColor="@color/colorBlack"
     app:chartTextSize="10sp" />
-    
+
 2. Set data in 'MyPieView'
 
 val pieList = ArrayList<MyPieHelper>()
@@ -115,9 +138,10 @@ binding.pieView.setData(pieList)
 ```
 
 **3. Common RecyclerView adapter**
+
     Forgot about creating different classes for different recyclerview adapters.
     Use data binding and recyclerview. Create string type list and set adapter to recyclerview in below code.
-    
+
 ```java
 val list = arrayListOf<String>()
 list.add("Item One")
@@ -126,7 +150,7 @@ list.add("Item Three")
 list.add("Item Four")
 list.add("Item Five")
 val adapter =
-MyBaseListAdapter<String>(R.layout.item_recyclerview, 
+MyBaseListAdapter<String>(R.layout.item_recyclerview,
     object : OnAdapterItemClick {
         override fun onItemClick(position: Int) {
             MyUtils.showToast(mContext, list[position])
@@ -152,8 +176,9 @@ adapter.submitList(list)
 ```
 
 **4. Add map in scroll view**
+
     You can add google map view in scrollview without any zooming issue.
-    
+
 ```java
 1. Add 'fragment' class name 'com.dawinderutilslib.mapview.MyMapView'
 
@@ -178,8 +203,9 @@ private fun setUpMap() {
 ```
 
 **5. Custom page indicator**
+
     Add page indicator to the view pager without using any library. You can add your custom drawable in selected and unselected dots of page indicator.
-    
+
 ```java
 1. Add 'LinearLayout' where you want to show page indicator
 
@@ -190,27 +216,29 @@ private fun setUpMap() {
     android:layout_marginBottom="10sp"
     android:gravity="center"
     android:orientation="horizontal" />
-    
+
 2. Initiate page indicator
 
 MyPageIndicator(mContext)
     .ini(binding.viewPager, binding.llIndicator)
     .setDrawable(R.drawable.custom_dot_selected,R.drawable.custom_dot_unselecte)
     .build()
-    
+
 \*Note : 'ini' method need 'viewpager' and 'linear layout'. 'setDrawable' method is to add custom drawable to the indicator dots. Do not call this method if you want default dots. If you want to change only one then another parameter set '0'*\
 ```
 
 **6. Some basic methods**
+
     This is one of the most useful class. In which added some basic methods which we need in most of our android projects. Like check internet connection, get current date, load image etc.
-    
+
 ```java
 MyUtils.showToast(mContext, "Like this you can use MyUtils class methods.")
 ```
-    
+
 **7. Zoom image**
+
     A simple pinch-to-zoom ImageView for Android with an emphasis on a smooth and natural feel.
-    
+
 ```java
 <com.dawinderutilslib.zoomimageview.MyZoomImageView
     android:id="@+id/ivZoom"
@@ -219,8 +247,9 @@ MyUtils.showToast(mContext, "Like this you can use MyUtils class methods.")
 ```
 
 **8. Get any permission**
-    You can get multiple permissions at one time with the help of this class.
-    
+
+    You can get multile permissions at one time with the help of this class.
+
 ```java
 1. Add this in 'onRequestPermissionsResult' method of activity/fragment
 
@@ -235,7 +264,7 @@ MyPermissionChecker.onRequestPermissionsResult(
 
 MyPermissionChecker.getPermission(
     mContext,
-    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA), 
+    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA),
     object : OnPermissionGranted {
                 override fun onPermissionGranted() {
                     MyUtils.showToast(mContext, "All permissions granted.")
@@ -244,8 +273,9 @@ MyPermissionChecker.getPermission(
 ```
 
 **9. Location picker**
+
     Easy way to get device location. This class will handle all things needed to get location of device like permission, check GPS etc.
-    
+
 ```java
 1. Add this in 'onRequestPermissionsResult' method of activity/fragment
 
@@ -262,7 +292,7 @@ MyLocationPicker.onActivityResult(mContext, requestCode, resultCode, data)
 
 3. Now its time to get location
 
-MyLocationPicker.getCurrentLocation(mContext, 
+MyLocationPicker.getCurrentLocation(mContext,
     object : OnLocationPick {
         override fun onLocationPick(latitude: Double, longitude: Double) {
             MyUtils.showToast(
@@ -274,6 +304,7 @@ MyLocationPicker.getCurrentLocation(mContext,
 ```
 
 **10. Image picker**
+
     Easy to way get image from device storage or capture image from camera. There is ability to disable gallery or camera option.
     
 ```java
