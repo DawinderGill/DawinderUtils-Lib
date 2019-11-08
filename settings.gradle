@@ -1,2 +1,2 @@
 include ':app', ':dawinderUtilsLib'
-rootProject.name='MyUtilsLibTest'
+rootProject.name='MyUtils-Lib'

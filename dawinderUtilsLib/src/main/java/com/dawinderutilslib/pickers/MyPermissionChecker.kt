@@ -1,12 +1,14 @@
 @file:Suppress("UNUSED_PARAMETER")
 
-package com.dawinderutilslib
+package com.dawinderutilslib.pickers
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.dawinderutilslib.MyUtils
+import com.dawinderutilslib.R
 import com.dawinderutilslib.listeners.OnPermissionGranted
 
 object MyPermissionChecker {
@@ -19,9 +21,13 @@ object MyPermissionChecker {
         permissions: Array<String>,
         listener: OnPermissionGranted
     ) {
-        this.listener = listener
+        MyPermissionChecker.listener = listener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!isPermissionsGranted(mContext, permissions)) {
+            if (!isPermissionsGranted(
+                    mContext,
+                    permissions
+                )
+            ) {
                 (mContext as AppCompatActivity).requestPermissions(
                     permissions,
                     REQUEST_CODE_PERMISSION

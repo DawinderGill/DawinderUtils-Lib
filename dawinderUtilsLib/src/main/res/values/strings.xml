@@ -9,11 +9,12 @@
     <string name="camera">CAMERA</string>
     <string name="failed_to_capture_image">Failed to capture image.</string>
     <string name="failed_to_fetch">Failed to get file</string>
-    <string name="take_photo">Take Picture</string>
-    <string name="choose_image">Gallery</string>
+    <string name="take_photo">Take image with Camera</string>
+    <string name="choose_image">Choose image from Gallery</string>
     <string name="location_permission_required">Location permission required.</string>
     <string name="failed_to_get_location">Failed to get location. Please try after some time.</string>
     <string name="location_setting_unavailable">Location setting unavailable.</string>
+    <string name="location_error">Error while getting error : %1s</string>
     <string name="ok">OK</string>
     <string name="turn_on_gps">To get access for full functionality of app please turn on your gps.</string>
     <string name="demo_min_label">Min</string>
