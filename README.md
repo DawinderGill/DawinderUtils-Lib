@@ -1,8 +1,7 @@
 MyUtils-Lib
 =====
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.DawinderGill/DawinderUtils-Lib/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.DawinderGill/DawinderUtils-Lib)
+[![](https://jitpack.io/v/DawinderGill/DawinderUtils-Lib.svg)](https://jitpack.io/#DawinderGill/DawinderUtils-Lib)
 
-Current Version : 1.4
 --------------------
 
 Library Includes
@@ -48,7 +47,9 @@ Library Includes
 
     Easy to way get image from device storage or capture image from camera. There is ability to disable gallery or camera option.
 
+[![Watch the video](https://img.youtube.com/vi/tcQz_XEYbo0/0.jpg)](https://youtu.be/tcQz_XEYbo0)
 
+--------------------
 Download
 --------
 
@@ -83,6 +84,7 @@ Or Maven:
 </dependency>
 ```
 
+--------------------
 
 How do I use this library?
 -----------------------
@@ -306,7 +308,7 @@ MyLocationPicker.getCurrentLocation(mContext,
 **10. Image picker**
 
     Easy to way get image from device storage or capture image from camera. There is ability to disable gallery or camera option.
-    
+
 ```java
 1. Add this in 'onRequestPermissionsResult' method of activity/fragment
 
@@ -323,13 +325,16 @@ MyImagePicker.onActivityResult(mContext, requestCode, resultCode, data)
 
 3. Now its time to get image. You can disable gallery or camera option by calling 'disableGallery()' and 'disableCamera()' methods.
 
-MyImagePicker.selectImage(mContext, 
+MyImagePicker.selectImage(mContext,
     object : OnImagePick {
         override fun onImagePick(path: String) {
             MyUtils.showToast(mContext, "Image path : $path")
         }
     })
 ```
+
+--------------------
+
 Developer
 ---------
 **Dawinder Singh**
