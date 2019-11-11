@@ -47,6 +47,15 @@ Library Includes
 
     Easy to way get image from device storage or capture image from camera. There is ability to disable gallery or camera option.
 
+**Gif Demo**
+-----------
+![](https://media.giphy.com/media/iiQEEAQITxifM0XV5S/giphy.gif)
+
+--------------------------------------------------
+
+**Video Demo**
+-----------
+
 [![Watch the video](https://img.youtube.com/vi/tcQz_XEYbo0/0.jpg)](https://youtu.be/tcQz_XEYbo0)
 
 --------------------
