@@ -108,7 +108,7 @@ class MyPieHelper {
     }
 
     private fun updateSelf(origin: Float, target: Float, velocity: Int): Float {
-        var origin = origin
+        @Suppress("NAME_SHADOWING") var origin = origin
         if (origin < target) {
             origin += velocity.toFloat()
         } else if (origin > target) {

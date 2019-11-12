@@ -57,7 +57,7 @@ class MyZoomImageView : ImageView, GestureDetector.OnGestureListener,
         imageMatrix = matrix
         scaleType = ScaleType.MATRIX
 
-        setOnTouchListener { v, event ->
+        setOnTouchListener { _, event ->
             mScaleDetector.onTouchEvent(event)
             mGestureDetector.onTouchEvent(event)
 
