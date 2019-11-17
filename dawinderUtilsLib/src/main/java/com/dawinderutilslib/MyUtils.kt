@@ -55,7 +55,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import jp.wasabeef.glide.transformations.BlurTransformation
 import java.io.ByteArrayOutputStream
@@ -1133,7 +1133,7 @@ object MyUtils {
     }
 
     /**
-     * Load image into imageview
+     * Load image into imageView
      *
      * @param mContext    Context of Activity or Fragment
      * @param url         Url that want to load into Imageview
@@ -1141,12 +1141,15 @@ object MyUtils {
      * @param placeholder Drawable image while loading image from Url
      */
     fun loadImage(mContext: Context, url: Any, imageView: ImageView, placeholder: Int) {
-        Glide.with(mContext).load(url).apply(RequestOptions().placeholder(placeholder))
+        Glide.with(mContext)
+            .load(url)
+            .placeholder(placeholder)
+            .transition(DrawableTransitionOptions.withCrossFade(500))
             .into(imageView)
     }
 
     /**
-     * Load blur image into imageview
+     * Load blur image into imageView
      *
      * @param mContext    Context of Activity or Fragment
      * @param url         Url that want to load into Imageview
@@ -1156,7 +1159,8 @@ object MyUtils {
     fun loadBlurImage(mContext: Context, url: Any, imageView: ImageView, placeholder: Int) {
         Glide.with(mContext).load(url)
             .apply(bitmapTransform(BlurTransformation(15)))
-            .apply(RequestOptions().placeholder(placeholder))
+            .placeholder(placeholder)
+            .transition(DrawableTransitionOptions.withCrossFade(500))
             .into(imageView)
     }
 
