@@ -1700,11 +1700,14 @@ object MyUtils {
      * To navigate fragment
      *
      * @param view View on click you want to navigate fragment
-     * @param id Int id action of navigation controller
+     * @param fragmentID destination fragment id
+     * @param actionID destination fragment action id
      * @param bundle Bundle data you want to pass to next fragment
      */
-    fun navigateFragment(view: View, id: Int, bundle: Bundle?) {
-        Navigation.findNavController(view).navigate(id, bundle)
+    fun navigateFragment(view: View, fragmentID: Int, actionID: Int, bundle: Bundle?) {
+        val controller = Navigation.findNavController(view)
+        if (controller.currentDestination?.id != fragmentID)
+            controller.navigate(actionID, bundle)
     }
 
     /**
