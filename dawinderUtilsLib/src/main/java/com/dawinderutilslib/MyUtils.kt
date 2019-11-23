@@ -57,6 +57,9 @@ import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.glide.transformations.BlurTransformation
 import java.io.ByteArrayOutputStream
 import java.io.UnsupportedEncodingException
@@ -120,6 +123,32 @@ object MyUtils {
      */
     fun showToast(mContext: Context, message: String) {
         Toast.makeText(mContext, message, Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * Show snackbar
+     *
+     * @param view in which you want to show it
+     * @param message  Message that show into the snackbar
+     * @param backgroundColor  background color of snackbar (Default : Black)
+     * @param textColor  text color of snackbar (Default : White)
+     * @param textSize  text size of snackbar (Default : 10)
+     */
+    fun showSnackBar(
+        view: View,
+        message: String,
+        backgroundColor: Int = android.R.color.black,
+        textColor: Int = android.R.color.white,
+        textSize: Int = 10
+    ) {
+        val snackBar = Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+        val snackBarView = snackBar.view
+        snackBarView.setBackgroundColor(ContextCompat.getColor(view.context, backgroundColor))
+        val textView =
+            snackBarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+        textView.setTextColor(ContextCompat.getColor(view.context, textColor))
+        textView.textSize = textSize.toFloat()
+        snackBar.show()
     }
 
     /**
@@ -737,11 +766,19 @@ object MyUtils {
 
     }
 
-    fun changeDateFormat(dateTime: String): String {
-        val inputPattern = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        val outputPattern = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+    /**
+     * Change date format
+     *
+     * @param dateTime String date time
+     * @param inputFormat Sample input date time format
+     * @param outputFormat Sample output date time format
+     * @return date in give output date format if format it correct
+     */
+    fun changeDateFormat(dateTime: String, inputFormat: String, outputFormat: String): String {
+        val inputPattern = SimpleDateFormat(inputFormat, Locale.US)
+        val outputPattern = SimpleDateFormat(outputFormat, Locale.US)
         try {
-            val prevDate = inputPattern.parse(dateTime)
+            val prevDate = inputPattern.parse(dateTime)!!
             return outputPattern.format(prevDate)
         } catch (e: Exception) {
             // TODO Auto-generated catch block
@@ -1714,5 +1751,26 @@ object MyUtils {
     fun getRandomColor(): Int {
         val rnd = Random()
         return Color.argb(120, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+    }
+
+    /**
+     * Get bitmapDescriptor from vector image to add as marker on google map
+     */
+    fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
