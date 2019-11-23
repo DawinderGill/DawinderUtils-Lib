@@ -139,7 +139,7 @@ object MyUtils {
         message: String,
         backgroundColor: Int = android.R.color.black,
         textColor: Int = android.R.color.white,
-        textSize: Int = 10
+        textSize: Float = 10F
     ) {
         val snackBar = Snackbar.make(view, message, Snackbar.LENGTH_LONG)
         val snackBarView = snackBar.view
@@ -147,7 +147,7 @@ object MyUtils {
         val textView =
             snackBarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
         textView.setTextColor(ContextCompat.getColor(view.context, textColor))
-        textView.textSize = textSize.toFloat()
+        textView.textSize = textSize
         snackBar.show()
     }
 
