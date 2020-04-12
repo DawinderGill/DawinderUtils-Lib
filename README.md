@@ -53,12 +53,6 @@ Library Includes
 
 --------------------------------------------------
 
-**Video Demo**
------------
-
-[![Watch the video](https://img.youtube.com/vi/tcQz_XEYbo0/0.jpg)](https://youtu.be/tcQz_XEYbo0)
-
---------------------
 Download
 --------
 
