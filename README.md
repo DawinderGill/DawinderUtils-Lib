@@ -73,7 +73,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.8'
+    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.9'
 }
 ```
 
@@ -89,7 +89,7 @@ Or Maven:
 <dependency>
     <groupId>com.github.DawinderGill</groupId>
     <artifactId>DawinderUtils-Lib</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
 </dependency>
 ```
 
@@ -230,12 +230,21 @@ private fun setUpMap() {
 
 2. Initiate page indicator
 
+//For ViewPager
 MyPageIndicator(mContext)
     .ini(binding.viewPager, binding.llIndicator)
     .setDrawable(R.drawable.custom_dot_selected,R.drawable.custom_dot_unselecte)
     .build()
 
 \*Note : 'ini' method need 'viewpager' and 'linear layout'. 'setDrawable' method is to add custom drawable to the indicator dots. Do not call this method if you want default dots. If you want to change only one then another parameter set '0'*\
+
+//For ViewPager2
+MyPageIndicator2(mContext)
+    .ini(binding.viewPager, binding.llIndicator)
+    .setDrawable(R.drawable.custom_dot_selected,R.drawable.custom_dot_unselecte)
+    .build()
+
+\*Note : 'ini' method need 'viewpager2' and 'linear layout'. 'setDrawable' method is to add custom drawable to the indicator dots. Do not call this method if you want default dots. If you want to change only one then another parameter set '0'*\
 ```
 
 **6. Some basic methods**
