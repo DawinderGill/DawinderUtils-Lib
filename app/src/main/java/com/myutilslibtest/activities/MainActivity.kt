@@ -2,6 +2,7 @@ package com.myutilslibtest.activities
 
 import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             })
         }
+
+        MyUtils.showMessageDialog(mContext,"test","message",null)
     }
 
     private fun setPieChart() {

@@ -50,6 +50,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -169,9 +170,9 @@ object MyUtils {
         mContext: Context, title: String,
         message: String, positiveText: String,
         negativeText: String, neutralText: String,
-        positiveListener: DialogInterface.OnClickListener,
-        negativeListener: DialogInterface.OnClickListener,
-        neutralListener: DialogInterface.OnClickListener,
+        positiveListener: DialogInterface.OnClickListener?,
+        negativeListener: DialogInterface.OnClickListener?,
+        neutralListener: DialogInterface.OnClickListener?,
         isCancelable: Boolean
     ): AlertDialog.Builder {
         val alert = AlertDialog.Builder(mContext)
@@ -196,7 +197,7 @@ object MyUtils {
         mContext: Context,
         title: String,
         message: String,
-        listener: DialogInterface.OnClickListener
+        listener: DialogInterface.OnClickListener?
     ) {
         val dialog = AlertDialog.Builder(mContext)
         dialog.setTitle(title)
@@ -1775,5 +1776,35 @@ object MyUtils {
         val canvas = Canvas(bitmap)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    /**
+     * Get image bitmap in portrait
+     */
+    fun getImageInPortrait(file: String): Bitmap {
+        return try {
+            val bounds = BitmapFactory.Options()
+            bounds.inJustDecodeBounds = true
+            BitmapFactory.decodeFile(file, bounds)
+            val opts = BitmapFactory.Options()
+            val bm = BitmapFactory.decodeFile(file, opts)
+            val exif = ExifInterface(file)
+            val orientString: String? = exif.getAttribute(ExifInterface.TAG_ORIENTATION)
+            val orientation =
+                orientString?.toInt()
+            var rotationAngle = 0
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270
+            val matrix = Matrix()
+            matrix.setRotate(
+                rotationAngle.toFloat(),
+                bm.width.toFloat() / 2,
+                bm.height.toFloat() / 2
+            )
+            Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true)
+        } catch (e: Exception) {
+            BitmapFactory.decodeFile(file)
+        }
     }
 }
