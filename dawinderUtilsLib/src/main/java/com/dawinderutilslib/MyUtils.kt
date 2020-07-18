@@ -576,7 +576,23 @@ object MyUtils {
         val dayFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
 
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = java.lang.Long.parseLong(TimeInMillis) * 1000
+        calendar.timeInMillis = java.lang.Long.parseLong(TimeInMillis)
+        weekDay = dayFormat.format(calendar.time)
+        return weekDay
+    }
+
+    /**
+     * Get Date from Timestamp give pattern and get outout accordingly
+     *
+     * @param TimeInMillis Timestamp
+     * @return Returns Date according to give Timestamp
+     */
+    fun getDateFromTimeStamp(TimeInMillis: String, pattern: String): String {
+        val weekDay: String
+        val dayFormat = SimpleDateFormat(pattern, Locale.US)
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = java.lang.Long.parseLong(TimeInMillis)
         weekDay = dayFormat.format(calendar.time)
         return weekDay
     }
@@ -1594,7 +1610,8 @@ object MyUtils {
         return if (text.isEmpty())
             ArrayList()
         else
-            ArrayList(listOf(*text.split("\\s*,\\s*".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()))
+            ArrayList(listOf(*text.split("\\s*,\\s*".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()))
     }
 
     /**
