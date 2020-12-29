@@ -8,9 +8,9 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
-import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 
-class MyZoomImageView : ImageView, GestureDetector.OnGestureListener,
+class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     GestureDetector.OnDoubleTapListener {
 
     internal lateinit var matrix: Matrix

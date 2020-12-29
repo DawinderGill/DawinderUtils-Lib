@@ -21,7 +21,7 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.item_image_picker, container, false)
         binding.tvGallery.setOnClickListener {
             dismiss()

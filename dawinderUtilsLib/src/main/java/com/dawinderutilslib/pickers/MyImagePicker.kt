@@ -150,6 +150,7 @@ object MyImagePicker {
         )
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun gotoCamera(mContext: Context) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(mContext.packageManager) != null) {

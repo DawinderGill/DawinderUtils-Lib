@@ -172,7 +172,7 @@ class MyTinyDB(appContext: Context) {
      */
     fun getListInt(key: String): ArrayList<Int> {
         val myList = TextUtils.split(preferences.getString(key, ""), "‚‗‚")
-        val arrayToList = ArrayList(Arrays.asList(*myList))
+        val arrayToList = ArrayList(listOf(*myList))
         val newList = ArrayList<Int>()
 
         for (item in arrayToList)
@@ -210,11 +210,10 @@ class MyTinyDB(appContext: Context) {
     fun getDouble(key: String, defaultValue: Double): Double {
         val number = getString(key)
 
-        try {
-            return java.lang.Double.parseDouble(number!!)
-
+        return try {
+            java.lang.Double.parseDouble(number!!)
         } catch (e: NumberFormatException) {
-            return defaultValue
+            defaultValue
         }
 
     }
@@ -226,7 +225,7 @@ class MyTinyDB(appContext: Context) {
      */
     fun getListDouble(key: String): ArrayList<Double> {
         val myList = TextUtils.split(preferences.getString(key, ""), "‚‗‚")
-        val arrayToList = ArrayList(Arrays.asList(*myList))
+        val arrayToList = ArrayList(listOf(*myList))
         val newList = ArrayList<Double>()
 
         for (item in arrayToList)
