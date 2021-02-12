@@ -19,7 +19,6 @@ import com.dawinderutilslib.listeners.OnDialogOptionSelected
 import com.dawinderutilslib.listeners.OnImagePick
 import java.io.File
 
-@Suppress("UNUSED_PARAMETER")
 object MyImagePicker {
 
     private var cameraClickPath = ""
@@ -108,7 +107,6 @@ object MyImagePicker {
     fun onRequestPermissionsResult(
         mContext: Context,
         requestCode: Int,
-        permissions: Array<out String>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_GALLERY) {

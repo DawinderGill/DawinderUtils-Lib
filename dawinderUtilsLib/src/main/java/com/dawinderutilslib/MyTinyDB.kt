@@ -17,7 +17,7 @@ import java.util.*
 
 class MyTinyDB(appContext: Context) {
     private var preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-    private var DEFAULT_APP_IMAGE_DATA_DIRECTORY: String? = null
+    private var defaultAppImageDataDirectory: String? = null
     private var lastImagePath = ""
 
     /**
@@ -31,7 +31,6 @@ class MyTinyDB(appContext: Context) {
             bitmapFromPath = BitmapFactory.decodeFile(path)
 
         } catch (e: Exception) {
-            // TODO: handle exception
             e.printStackTrace()
         }
 
@@ -59,7 +58,7 @@ class MyTinyDB(appContext: Context) {
         if (theFolder == null || theImageName == null || theBitmap == null)
             return null
 
-        this.DEFAULT_APP_IMAGE_DATA_DIRECTORY = theFolder
+        this.defaultAppImageDataDirectory = theFolder
         val mFullPath = setupFullPath(theImageName)
 
         if (mFullPath != "") {
@@ -87,7 +86,7 @@ class MyTinyDB(appContext: Context) {
      * @return the full path of the image. If it failed to create directory, return empty string
      */
     private fun setupFullPath(imageName: String): String {
-        val mFolder = File(Environment.getDownloadCacheDirectory(), DEFAULT_APP_IMAGE_DATA_DIRECTORY)
+        val mFolder = File(Environment.getDownloadCacheDirectory(), defaultAppImageDataDirectory)
 
         if (isExternalStorageReadable() && isExternalStorageWritable() && !mFolder.exists()) {
             if (!mFolder.mkdirs()) {
@@ -249,7 +248,7 @@ class MyTinyDB(appContext: Context) {
      * @return ArrayList of String
      */
     fun getListString(key: String): ArrayList<String> {
-        return ArrayList(Arrays.asList(*TextUtils.split(preferences.getString(key, ""), "‚‗‚")))
+        return ArrayList(listOf(*TextUtils.split(preferences.getString(key, ""), "‚‗‚")))
     }
 
     /**

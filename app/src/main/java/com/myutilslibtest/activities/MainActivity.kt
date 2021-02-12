@@ -2,7 +2,6 @@ package com.myutilslibtest.activities
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -167,13 +166,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         MyImagePicker.onRequestPermissionsResult(
             mContext,
             requestCode,
-            permissions,
             grantResults
         )
         MyLocationPicker.onRequestPermissionsResult(
             mContext,
             requestCode,
-            permissions,
             grantResults
         )
     }
@@ -181,6 +178,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         MyImagePicker.onActivityResult(mContext, requestCode, resultCode, data)
-        MyLocationPicker.onActivityResult(mContext, requestCode, resultCode, data)
+        MyLocationPicker.onActivityResult(mContext, requestCode, resultCode)
     }
 }

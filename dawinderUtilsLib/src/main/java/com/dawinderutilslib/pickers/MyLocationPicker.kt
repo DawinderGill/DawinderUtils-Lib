@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
@@ -21,7 +20,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 
-@Suppress("UNUSED_PARAMETER")
 object MyLocationPicker {
 
     private const val REQUEST_CODE_LOCATION = 8001
@@ -51,7 +49,6 @@ object MyLocationPicker {
     fun onRequestPermissionsResult(
         mContext: Context,
         requestCode: Int,
-        permissions: Array<out String>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_LOCATION) {
@@ -110,7 +107,7 @@ object MyLocationPicker {
         }
     }
 
-    fun onActivityResult(mContext: Context, requestCode: Int, resultCode: Int, data: Intent?) {
+    fun onActivityResult(mContext: Context, requestCode: Int, resultCode: Int) {
         if (requestCode == REQUEST_CODE_LOCATION) {
             if (resultCode == Activity.RESULT_OK) {
                 getLocation(mContext)

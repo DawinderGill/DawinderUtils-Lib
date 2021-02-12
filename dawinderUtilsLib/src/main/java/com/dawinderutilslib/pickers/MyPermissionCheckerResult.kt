@@ -51,9 +51,7 @@ object MyPermissionCheckerResult {
     }
 
     fun onRequestPermissionsResult(
-        mContext: Context,
         requestCode: Int,
-        permissions: Array<out String>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSION) {

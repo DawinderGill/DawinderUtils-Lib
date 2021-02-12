@@ -8,6 +8,10 @@ import android.view.MotionEvent
 import android.view.View
 import com.dawinderutilslib.R
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 class MyPieView : View {
 
@@ -30,11 +34,11 @@ class MyPieView : View {
     private var onPieClickListener: OnPieClickListener? = null
 
     private var pieHelperList: ArrayList<MyPieHelper> = ArrayList()
-    val NO_SELECTED_INDEX = -999
+    val noSelectedIndex = -999
 
-    private var selectedIndex = NO_SELECTED_INDEX
+    private var selectedIndex = noSelectedIndex
     private var showPercentLabel = true
-    private val DEFAULT_COLOR_LIST = intArrayOf(
+    private val defaultColorList = intArrayOf(
         Color.parseColor("#33B5E5"),
         Color.parseColor("#AA66CC"),
         Color.parseColor("#99CC00"),
@@ -141,8 +145,8 @@ class MyPieView : View {
     }
 
     fun removeSelectedPie() {
-        selectedIndex = NO_SELECTED_INDEX
-        if (onPieClickListener != null) onPieClickListener!!.onPieClick(NO_SELECTED_INDEX)
+        selectedIndex = noSelectedIndex
+        if (onPieClickListener != null) onPieClickListener!!.onPieClick(noSelectedIndex)
         postInvalidate()
     }
 
@@ -150,14 +154,13 @@ class MyPieView : View {
         if (pieHelperList.isEmpty()) {
             return
         }
-        var index = 0
-        for (pieHelper in pieHelperList) {
+        for ((index, pieHelper) in pieHelperList.withIndex()) {
             val selected = selectedIndex == index
             val rect = if (selected) cirSelectedRect else cirRect
             if (pieHelper.isColorSetted()) {
                 cirPaint.color = pieHelper.getColor()
             } else {
-                cirPaint.color = DEFAULT_COLOR_LIST[index % 5]
+                cirPaint.color = defaultColorList[index % 5]
             }
             canvas.drawArc(rect, pieHelper.getStartDegree(), pieHelper.getSweep(), true, cirPaint)
             if (pieHelper.getPercentage() > 1)
@@ -165,7 +168,6 @@ class MyPieView : View {
 
             //drawLineBesideCir(canvas, pieHelper.getStartDegree(), selected);
             //drawLineBesideCir(canvas, pieHelper.getEndDegree(), selected);
-            index++
         }
 
     }
@@ -178,9 +180,9 @@ class MyPieView : View {
             sth = -1
         }
         val lineToX =
-            (mViewHeight / 2 + Math.cos(Math.toRadians((-angel).toDouble())) * sth2).toFloat()
+            (mViewHeight / 2 + cos(Math.toRadians((-angel).toDouble())) * sth2).toFloat()
         val lineToY =
-            (mViewHeight / 2 + sth.toDouble() * Math.abs(Math.sin(Math.toRadians((-angel).toDouble()))) * sth2.toDouble()).toFloat()
+            (mViewHeight / 2 + sth.toDouble() * abs(sin(Math.toRadians((-angel).toDouble()))) * sth2.toDouble()).toFloat()
         canvas.drawLine(
             pieCenterPoint.x.toFloat(),
             pieCenterPoint.y.toFloat(),
@@ -198,9 +200,9 @@ class MyPieView : View {
             sth = -1
         }
         val x =
-            (mViewHeight / 2 + Math.cos(Math.toRadians((-angel).toDouble())) * pieRadius / 1.2).toFloat()
+            (mViewHeight / 2 + cos(Math.toRadians((-angel).toDouble())) * pieRadius / 1.2).toFloat()
         val y =
-            ((mViewHeight / 2).toDouble() + sth.toDouble() * Math.abs(Math.sin(Math.toRadians((-angel).toDouble()))) * pieRadius.toDouble() / 1.2 + 8.0).toFloat()
+            ((mViewHeight / 2).toDouble() + sth.toDouble() * abs(sin(Math.toRadians((-angel).toDouble()))) * pieRadius.toDouble() / 1.2 + 8.0).toFloat()
         canvas.drawText(pieHelper.getPercentStr(), x, y, textPaint)
     }
 
@@ -212,12 +214,13 @@ class MyPieView : View {
             sth = -1
         }
         val x =
-            (mViewHeight / 2 + Math.cos(Math.toRadians((-angel).toDouble())) * pieRadius / 2).toFloat()
+            (mViewHeight / 2 + cos(Math.toRadians((-angel).toDouble())) * pieRadius / 2).toFloat()
         val y =
-            (mViewHeight / 2 + sth.toDouble() * Math.abs(Math.sin(Math.toRadians((-angel).toDouble()))) * pieRadius.toDouble() / 2).toFloat()
+            (mViewHeight / 2 + sth.toDouble() * abs(sin(Math.toRadians((-angel).toDouble()))) * pieRadius.toDouble() / 2).toFloat()
         canvas.drawText(pieHelper.getTitle()!!, x, y, textPaint)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         /*if (event.getAction() == MotionEvent.ACTION_DOWN ||event.getAction() == MotionEvent.ACTION_MOVE){
             selectedIndex = findPointAt((int) event.getX(), (int) event.getY());
@@ -238,19 +241,17 @@ class MyPieView : View {
      * @return
      */
     private fun findPointAt(x: Int, y: Int): Int {
-        var degree = Math.atan2(
+        var degree = atan2(
             (x - pieCenterPoint.x).toDouble(),
             (y - pieCenterPoint.y).toDouble()
         ) * 180 / Math.PI
         degree = -(degree - 180) + 270
-        var index = 0
-        for (pieHelper in pieHelperList) {
+        for ((index, pieHelper) in pieHelperList.withIndex()) {
             if (degree >= pieHelper.getStartDegree() && degree <= pieHelper.getEndDegree()) {
                 return index
             }
-            index++
         }
-        return NO_SELECTED_INDEX
+        return noSelectedIndex
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -285,14 +286,12 @@ class MyPieView : View {
     }
 
     private fun getMeasurement(measureSpec: Int, preferred: Int): Int {
-        val specSize = View.MeasureSpec.getSize(measureSpec)
-        val measurement: Int
+        val specSize = MeasureSpec.getSize(measureSpec)
 
-        measurement = when (MeasureSpec.getMode(measureSpec)) {
+        return when (MeasureSpec.getMode(measureSpec)) {
             MeasureSpec.EXACTLY -> specSize
-            MeasureSpec.AT_MOST -> Math.min(preferred, specSize)
+            MeasureSpec.AT_MOST -> preferred.coerceAtMost(specSize)
             else -> preferred
         }
-        return measurement
     }
 }

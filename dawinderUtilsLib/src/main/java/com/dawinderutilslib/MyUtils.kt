@@ -1,6 +1,7 @@
 @file:Suppress(
     "UNUSED_ANONYMOUS_PARAMETER", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
-    "CAST_NEVER_SUCCEEDS", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+    "CAST_NEVER_SUCCEEDS", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
+    "MemberVisibilityCanBePrivate", "FunctionName"
 )
 
 package com.dawinderutilslib
@@ -41,10 +42,7 @@ import android.text.style.UnderlineSpan
 import android.transition.TransitionManager
 import android.util.Base64
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -76,6 +74,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.math.abs
 
 @Suppress("unused")
 object MyUtils {
@@ -381,8 +380,10 @@ object MyUtils {
     fun changeStatusBarColor(mContext: Context, act: AppCompatActivity, color: Int) {
         if (Build.VERSION.SDK_INT > 20) {
             val window = act.window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            /*window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(mContext, color)*/
+
             window.statusBarColor = ContextCompat.getColor(mContext, color)
         }
     }
@@ -534,7 +535,7 @@ object MyUtils {
     /**
      * Get day from Timestamp
      *
-     * @param TimeInMilis TimeStamp
+     * @param TimeInMillis TimeStamp
      * @return Returns day according to give Timestamp
      */
     fun getDayFromTimeStamp(TimeInMillis: String): String {
@@ -638,15 +639,14 @@ object MyUtils {
         val c = Calendar.getInstance()
         val currentTime: Date
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        try {
+        return try {
             val timeCompare = sdf.parse(datetime)
             currentTime = c.time
-            return timeCompare.compareTo(currentTime) >= 0
+            timeCompare >= currentTime
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return false
+            false
         }
 
     }
@@ -663,7 +663,6 @@ object MyUtils {
             val date2Final = cal.time
             date2Final > date1
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
             false
@@ -683,21 +682,19 @@ object MyUtils {
         @SuppressLint("SimpleDateFormat")
         val sdfStart = SimpleDateFormat("hh:mm:ss a", Locale.US)
         val sdfEnd = SimpleDateFormat("hh:mm a", Locale.US)
-        try {
+        return try {
             val time1 = sdfStart.parse(startTime)
             val calendar = Calendar.getInstance()
             calendar.time = time1
             calendar.add(Calendar.HOUR, 2)
             val newTime = calendar.time
             val time2 = sdfEnd.parse(endTime)
-            return time2.compareTo(newTime) > 0
+            time2 > newTime
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return false
+            false
         }
-
     }
 
     /**
@@ -712,16 +709,15 @@ object MyUtils {
         val c = Calendar.getInstance()
         val currentTime: Date
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        try {
+        return try {
             currentTime = c.time
             val startCompare = sdf.parse(starttime)
             val endCompare = sdf.parse(endtime)
-            return startCompare.compareTo(currentTime) <= 0 && endCompare.compareTo(currentTime) >= 0
+            startCompare <= currentTime && endCompare >= currentTime
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return false
+            false
         }
 
     }
@@ -741,20 +737,16 @@ object MyUtils {
         selectedDate: String
     ): Boolean {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        try {
+        return try {
             val startCompare = sdf.parse(startDate)
             val endCompare = sdf.parse(endDate)
             val selectedCompare = sdf.parse(selectedDate)
-            return startCompare.compareTo(selectedCompare) <= 0 && endCompare.compareTo(
-                selectedCompare
-            ) >= 0
+            selectedCompare in startCompare..endCompare
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return false
+            false
         }
-
     }
 
     /**
@@ -767,20 +759,18 @@ object MyUtils {
      */
     fun getDaysCountBetweenTwoDates(startDate: String, endDate: String): Int {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        try {
+        return try {
             val startCompare = sdf.parse(startDate)
             val endCompare = sdf.parse(endDate)
             val diff = endCompare.time - startCompare.time
             var days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
-            days = days + 1
-            return days
+            days += 1
+            days
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return 1
+            1
         }
-
     }
 
     /**
@@ -794,14 +784,13 @@ object MyUtils {
     fun changeDateFormat(dateTime: String, inputFormat: String, outputFormat: String): String {
         val inputPattern = SimpleDateFormat(inputFormat, Locale.US)
         val outputPattern = SimpleDateFormat(outputFormat, Locale.US)
-        try {
+        return try {
             val prevDate = inputPattern.parse(dateTime)!!
-            return outputPattern.format(prevDate)
+            outputPattern.format(prevDate)
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             Log.e("exp", "in catch")
             e.printStackTrace()
-            return dateTime
+            dateTime
         }
     }
 
@@ -812,8 +801,6 @@ object MyUtils {
      * @return return time in hh:mm:ss
      */
     fun getTimeInMinutes(duration: Int): String {
-        val hour: String
-        val min: String
         val sec: String
         if (TimeUnit.MILLISECONDS.toSeconds(duration.toLong()) - TimeUnit.MINUTES.toSeconds(
                 TimeUnit.MILLISECONDS.toMinutes(
@@ -831,15 +818,15 @@ object MyUtils {
                     TimeUnit.MILLISECONDS.toMinutes(duration.toLong())
                 ))
         }
-        if (TimeUnit.MILLISECONDS.toMinutes(duration.toLong()) < 10) {
-            min = "0" + TimeUnit.MILLISECONDS.toMinutes(duration.toLong())
+        val min: String = if (TimeUnit.MILLISECONDS.toMinutes(duration.toLong()) < 10) {
+            "0" + TimeUnit.MILLISECONDS.toMinutes(duration.toLong())
         } else {
-            min = "" + TimeUnit.MILLISECONDS.toMinutes(duration.toLong())
+            "" + TimeUnit.MILLISECONDS.toMinutes(duration.toLong())
         }
-        if (TimeUnit.MILLISECONDS.toHours(duration.toLong()) < 10) {
-            hour = "0" + TimeUnit.MILLISECONDS.toHours(duration.toLong())
+        val hour: String = if (TimeUnit.MILLISECONDS.toHours(duration.toLong()) < 10) {
+            "0" + TimeUnit.MILLISECONDS.toHours(duration.toLong())
         } else {
-            hour = "" + TimeUnit.MILLISECONDS.toHours(duration.toLong())
+            "" + TimeUnit.MILLISECONDS.toHours(duration.toLong())
         }
         return if (hour.equals("00", ignoreCase = true)) {
             "$min:$sec"
@@ -893,7 +880,7 @@ object MyUtils {
         var dayOne = day1.clone() as Calendar
         var dayTwo = day2.clone() as Calendar
         if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
-            return Math.abs(dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR))
+            return abs(dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR))
         } else {
             if (dayTwo.get(Calendar.YEAR) > dayOne.get(Calendar.YEAR)) {
                 //swap them
@@ -926,7 +913,6 @@ object MyUtils {
 
         @SuppressLint("SetTextI18n") val mDatePicker =
             DatePickerDialog(mContext, { datepicker, selectedyear, selectedmonth, selectedday ->
-                // TODO Auto-generated method stub
                 val month = selectedmonth + 1
                 val m = if (month > 9) "" + month else "0$month"
                 val d = if (selectedday > 9) "" + selectedday else "0$selectedday"
@@ -951,7 +937,6 @@ object MyUtils {
 
         @SuppressLint("SetTextI18n") val mDatePicker =
             DatePickerDialog(mContext, { datepicker, selectedyear, selectedmonth, selectedday ->
-                // TODO Auto-generated method stub
                 val month = selectedmonth + 1
                 val m = if (month > 9) "" + month else "0$month"
                 val d = if (selectedday > 9) "" + selectedday else "0$selectedday"
@@ -978,20 +963,19 @@ object MyUtils {
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
         val minute = mcurrentTime.get(Calendar.MINUTE)
-        val mTimePicker: TimePickerDialog
-        mTimePicker = TimePickerDialog(mContext, { timePicker, selectedHour, selectedMinute ->
-            val AM_PM = if (selectedHour >= 12) "PM" else "AM"
+        val mTimePicker =
+            TimePickerDialog(mContext, { timePicker, selectedHour, selectedMinute ->
+            val amPM = if (selectedHour >= 12) "PM" else "AM"
             val min = if (selectedMinute > 9) "" + selectedMinute else "0$selectedMinute"
-            val hour1: String
-            if (selectedHour < 10) {
-                hour1 = "0$selectedHour"
-            } else if (selectedHour < 13) {
-                hour1 = "" + selectedHour
-            } else {
-                val h = selectedHour - 12
-                hour1 = if (h > 9) "" + h else "0$h"
-            }
-            textView.text = "$hour1:$min $AM_PM"
+                val hour1: String = if (selectedHour < 10) {
+                    "0$selectedHour"
+                } else if (selectedHour < 13) {
+                    "" + selectedHour
+                } else {
+                    val h = selectedHour - 12
+                    if (h > 9) "" + h else "0$h"
+                }
+            textView.text = "$hour1:$min $amPM"
         }, hour, minute, false)
         mTimePicker.show()
     }
@@ -1079,8 +1063,6 @@ object MyUtils {
                 if ("primary".equals(type, ignoreCase = true)) {
                     return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
                 }
-
-                // TODO handle non-primary volumes
             } else if (isDownloadsDocument(uri)) {
 
                 val id = DocumentsContract.getDocumentId(uri)
@@ -1097,12 +1079,16 @@ object MyUtils {
                 val type = split[0]
 
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
 
                 val selection = "_id=?"
@@ -1224,6 +1210,7 @@ object MyUtils {
      * @param mContext  Context of Activity or Fragment
      * @param shareText Text that you want to share on twitter
      */
+    @SuppressLint("QueryPermissionsNeeded")
     fun twitterShare(mContext: Context, shareText: String) {
         //String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s", urlEncode("Testing"),urlEncode("Image Url"));
         val tweetUrl =
@@ -1232,7 +1219,7 @@ object MyUtils {
         // Narrow down to official Twitter app, if available:
         val matches = mContext.packageManager.queryIntentActivities(intent, 0)
         for (info in matches) {
-            if (info.activityInfo.packageName.toLowerCase().startsWith("com.twitter")) {
+            if (info.activityInfo.packageName.toLowerCase(Locale.getDefault()).startsWith("com.twitter")) {
                 intent.setPackage(info.activityInfo.packageName)
             }
         }
@@ -1363,10 +1350,15 @@ object MyUtils {
      */
     fun makeFullScreen(mContext: Context) {
         val activity = mContext as AppCompatActivity
-        activity.window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            @Suppress("DEPRECATION")
+            activity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
     }
 
     /**
@@ -1377,11 +1369,10 @@ object MyUtils {
      */
     fun isEmailValid(email: String): Boolean {
         val pattern: Pattern
-        val matcher: Matcher
-        val EMAIL_PATTERN =
+        val emailPattern =
             "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-        pattern = Pattern.compile(EMAIL_PATTERN)
-        matcher = pattern.matcher(email)
+        pattern = Pattern.compile(emailPattern)
+        val matcher: Matcher = pattern.matcher(email)
         return matcher.matches()
     }
 
@@ -1405,13 +1396,11 @@ object MyUtils {
      */
     @Suppress("DEPRECATION")
     fun fromHtml(text: String): Spanned {
-        val result: Spanned
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            result = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
         } else {
-            result = Html.fromHtml(text)
+            Html.fromHtml(text)
         }
-        return result
     }
 
     /**
@@ -1579,7 +1568,6 @@ object MyUtils {
             val input = connection.inputStream
             BitmapFactory.decodeStream(input)
         } catch (e: Exception) {
-            // TODO Auto-generated catch block
             e.printStackTrace()
             null
         }
@@ -1596,7 +1584,7 @@ object MyUtils {
         return if (text == "") {
             ""
         } else {
-            text.substring(0, 1).toUpperCase() + text.substring(1)
+            text.substring(0, 1).toUpperCase(Locale.getDefault()) + text.substring(1)
         }
     }
 

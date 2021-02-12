@@ -1,5 +1,6 @@
 package com.dawinderutilslib.piechart
 
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class MyPieHelper {
@@ -114,7 +115,7 @@ class MyPieHelper {
         } else if (origin > target) {
             origin -= velocity.toFloat()
         }
-        if (Math.abs(target - origin) < velocity) {
+        if (abs(target - origin) < velocity) {
             origin = target
         }
         return origin

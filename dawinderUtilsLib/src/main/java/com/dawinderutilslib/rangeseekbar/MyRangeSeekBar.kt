@@ -18,16 +18,16 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.NonNull
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import com.dawinderutilslib.R
 import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class MyRangeSeekBar<T : Number> : ImageView {
+class MyRangeSeekBar<T : Number> : AppCompatImageView {
 
     /**
      * Default color of a [MyRangeSeekBar], #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
@@ -373,12 +373,9 @@ class MyRangeSeekBar<T : Number> : ImageView {
      * @return rounded off value
      */
     private fun roundOffValueToStep(value: T): T {
-        val d = Math.round(value.toDouble() / absoluteStepValuePrim) * absoluteStepValuePrim
+        val d = (value.toDouble() / absoluteStepValuePrim).roundToInt() * absoluteStepValuePrim
         return numberType.toNumber(
-            Math.max(
-                absoluteMinValuePrim,
-                Math.min(absoluteMaxValuePrim, d)
-            )
+            absoluteMinValuePrim.coerceAtLeast(absoluteMaxValuePrim.coerceAtMost(d))
         ) as T
     }
 
@@ -495,7 +492,7 @@ class MyRangeSeekBar<T : Number> : ImageView {
                     pointerIndex = event.findPointerIndex(activePointerId)
                     val x = event.getX(pointerIndex)
 
-                    if (Math.abs(x - downMotionX) > scaledTouchSlop) {
+                    if (abs(x - downMotionX) > scaledTouchSlop) {
                         isPressed = true
                         invalidate()
                         onStartTrackingTouch()
@@ -564,7 +561,6 @@ class MyRangeSeekBar<T : Number> : ImageView {
         if (pointerId == activePointerId) {
             // This was our active pointer going up. Choose
             // a new active pointer and adjust accordingly.
-            // TODO: Make this decision more intelligent.
             val newPointerIndex = if (pointerIndex == 0) 1 else 0
             downMotionX = ev.getX(newPointerIndex)
             activePointerId = ev.getPointerId(newPointerIndex)
@@ -619,7 +615,7 @@ class MyRangeSeekBar<T : Number> : ImageView {
                 + (if (!showTextAboveThumbs) 0 else dpToPx(context, HEIGHT_IN_DP))
                 + (if (thumbShadow) thumbShadowYOffset + thumbShadowBlur else 0))
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
-            height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec))
+            height = height.coerceAtMost(MeasureSpec.getSize(heightMeasureSpec))
         }
         setMeasuredDimension(width, height)
     }
@@ -641,7 +637,7 @@ class MyRangeSeekBar<T : Number> : ImageView {
             // draw min and max labels
             val minLabel = context.getString(R.string.demo_min_label)
             val maxLabel = context.getString(R.string.demo_max_label)
-            minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel))
+            minMaxLabelSize = paint.measureText(minLabel).coerceAtLeast(paint.measureText(maxLabel))
             val minMaxHeight = textOffset.toFloat() + thumbHalfHeight + (textSize / 3).toFloat()
             canvas.drawText(minLabel, 0f, minMaxHeight, paint)
             canvas.drawText(maxLabel, width - minMaxLabelSize, minMaxHeight, paint)
@@ -701,11 +697,9 @@ class MyRangeSeekBar<T : Number> : ImageView {
             val maxTextWidth = paint.measureText(maxText)
             // keep the position so that the labels don't get cut off
             var minPosition =
-                Math.max(0f, normalizedToScreen(normalizedMinValue) - minTextWidth * 0.5f)
-            var maxPosition = Math.min(
-                width - maxTextWidth,
-                normalizedToScreen(normalizedMaxValue) - maxTextWidth * 0.5f
-            )
+                0f.coerceAtLeast(normalizedToScreen(normalizedMinValue) - minTextWidth * 0.5f)
+            var maxPosition =
+                (width - maxTextWidth).coerceAtMost(normalizedToScreen(normalizedMaxValue) - maxTextWidth * 0.5f)
 
             if (!singleThumb) {
                 // check if the labels overlap, or are too close to each other
@@ -743,7 +737,7 @@ class MyRangeSeekBar<T : Number> : ImageView {
     /**
      * Overridden to save instance state when device orientation changes. This method is called automatically if you assign an id to the MyRangeSeekBar widget using the [.setId] method. Other members of this class than the normalized min and max values don't need to be saved.
      */
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val bundle = Bundle()
         bundle.putParcelable("SUPER", super.onSaveInstanceState())
         bundle.putDouble("MIN", normalizedMinValue)
@@ -774,11 +768,10 @@ class MyRangeSeekBar<T : Number> : ImageView {
         canvas: Canvas,
         areSelectedValuesDefault: Boolean
     ) {
-        val buttonToDraw: Bitmap
-        if (!activateOnDefaultValues && areSelectedValuesDefault) {
-            buttonToDraw = this.thumbDisabledImage!!
+        val buttonToDraw: Bitmap = if (!activateOnDefaultValues && areSelectedValuesDefault) {
+            this.thumbDisabledImage!!
         } else {
-            buttonToDraw = if (pressed) this.thumbPressedImage!! else this.thumbImage!!
+            if (pressed) this.thumbPressedImage!! else this.thumbImage!!
         }
 
         canvas.drawBitmap(
@@ -842,7 +835,13 @@ class MyRangeSeekBar<T : Number> : ImageView {
      * @param value The new normalized min value to set.
      */
     internal fun setNormalizedMinValue(value: Double) {
-        normalizedMinValue = Math.max(0.0, Math.min(1.0, Math.min(value, normalizedMaxValue)))
+        normalizedMinValue = 0.0.coerceAtLeast(
+            1.0.coerceAtMost(
+                value.coerceAtMost(
+                    normalizedMaxValue
+                )
+            )
+        )
         invalidate()
     }
 
@@ -852,7 +851,11 @@ class MyRangeSeekBar<T : Number> : ImageView {
      * @param value The new normalized max value to set.
      */
     internal fun setNormalizedMaxValue(value: Double) {
-        normalizedMaxValue = Math.max(0.0, Math.min(1.0, Math.max(value, normalizedMinValue)))
+        normalizedMaxValue = 0.0.coerceAtLeast(
+            1.0.coerceAtMost(
+                value.coerceAtLeast(normalizedMinValue)
+            )
+        )
         invalidate()
     }
 
@@ -861,8 +864,7 @@ class MyRangeSeekBar<T : Number> : ImageView {
      */
     protected fun normalizedToValue(normalized: Double): T {
         val v = absoluteMinValuePrim + normalized * (absoluteMaxValuePrim - absoluteMinValuePrim)
-        // TODO parameterize this rounding to allow variable decimal points
-        return numberType.toNumber(Math.round(v * 100) / 100.0) as T
+        return numberType.toNumber((v * 100).roundToInt() / 100.0) as T
     }
 
     /**
@@ -896,12 +898,12 @@ class MyRangeSeekBar<T : Number> : ImageView {
      */
     private fun screenToNormalized(screenCoord: Float): Double {
         val width = width
-        if (width <= 2 * padding) {
+        return if (width <= 2 * padding) {
             // prevent division by zero, simply return 0.
-            return 0.0
+            0.0
         } else {
             val result = ((screenCoord - padding) / (width - 2 * padding)).toDouble()
-            return Math.min(1.0, Math.max(0.0, result))
+            1.0.coerceAtMost(0.0.coerceAtLeast(result))
         }
     }
 
@@ -926,8 +928,8 @@ class MyRangeSeekBar<T : Number> : ImageView {
                 DOUBLE -> value
                 INTEGER -> value.toInt()
                 FLOAT -> value.toFloat()
-                SHORT -> value.toShort()
-                BYTE -> value.toByte()
+                SHORT -> value.toInt().toShort()
+                BYTE -> value.toInt().toByte()
                 BIG_DECIMAL -> BigDecimal.valueOf(value)
             }
             throw InstantiationError("can't convert $this to a Number object")

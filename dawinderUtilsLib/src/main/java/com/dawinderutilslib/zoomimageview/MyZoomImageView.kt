@@ -9,6 +9,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import androidx.appcompat.widget.AppCompatImageView
+import kotlin.math.abs
 
 class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     GestureDetector.OnDoubleTapListener {
@@ -26,8 +27,8 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     internal var viewWidth: Int = 0
     internal var viewHeight: Int = 0
     internal var saveScale = 1f
-    protected var origWidth: Float = 0.toFloat()
-    protected var origHeight: Float = 0.toFloat()
+    private var origWidth: Float = 0.toFloat()
+    private var origHeight: Float = 0.toFloat()
     internal var oldMeasuredWidth: Int = 0
     internal var oldMeasuredHeight: Int = 0
 
@@ -88,8 +89,8 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
 
                 MotionEvent.ACTION_UP -> {
                     mode = NONE
-                    val xDiff = Math.abs(curr.x - start.x).toInt()
-                    val yDiff = Math.abs(curr.y - start.y).toInt()
+                    val xDiff = abs(curr.x - start.x).toInt()
+                    val yDiff = abs(curr.y - start.y).toInt()
                     if (xDiff < CLICK && yDiff < CLICK)
                         performClick()
                 }
@@ -272,7 +273,7 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
 
             val scaleX = viewWidth.toFloat() / bmWidth.toFloat()
             val scaleY = viewHeight.toFloat() / bmHeight.toFloat()
-            scale = Math.min(scaleX, scaleY)
+            scale = scaleX.coerceAtMost(scaleY)
             matrix.setScale(scale, scale)
 
             // Center the image
@@ -293,9 +294,9 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     companion object {
 
         // We can be in one of these 3 states
-        internal val NONE = 0
-        internal val DRAG = 1
-        internal val ZOOM = 2
-        internal val CLICK = 3
+        internal const val NONE = 0
+        internal const val DRAG = 1
+        internal const val ZOOM = 2
+        internal const val CLICK = 3
     }
 }
