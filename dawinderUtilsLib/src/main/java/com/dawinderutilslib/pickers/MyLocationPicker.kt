@@ -76,7 +76,7 @@ object MyLocationPicker {
     }
 
     private fun showSettingPopup(mContext: Context) {
-        val mLocationRequest = LocationRequest()
+        val mLocationRequest = LocationRequest.create()
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(mLocationRequest)
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
