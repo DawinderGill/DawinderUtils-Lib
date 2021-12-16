@@ -965,8 +965,8 @@ object MyUtils {
         val minute = mcurrentTime.get(Calendar.MINUTE)
         val mTimePicker =
             TimePickerDialog(mContext, { timePicker, selectedHour, selectedMinute ->
-            val amPM = if (selectedHour >= 12) "PM" else "AM"
-            val min = if (selectedMinute > 9) "" + selectedMinute else "0$selectedMinute"
+                val amPM = if (selectedHour >= 12) "PM" else "AM"
+                val min = if (selectedMinute > 9) "" + selectedMinute else "0$selectedMinute"
                 val hour1: String = if (selectedHour < 10) {
                     "0$selectedHour"
                 } else if (selectedHour < 13) {
@@ -975,8 +975,8 @@ object MyUtils {
                     val h = selectedHour - 12
                     if (h > 9) "" + h else "0$h"
                 }
-            textView.text = "$hour1:$min $amPM"
-        }, hour, minute, false)
+                textView.text = "$hour1:$min $amPM"
+            }, hour, minute, false)
         mTimePicker.show()
     }
 
@@ -1219,7 +1219,9 @@ object MyUtils {
         // Narrow down to official Twitter app, if available:
         val matches = mContext.packageManager.queryIntentActivities(intent, 0)
         for (info in matches) {
-            if (info.activityInfo.packageName.toLowerCase(Locale.getDefault()).startsWith("com.twitter")) {
+            if (info.activityInfo.packageName.toLowerCase(Locale.getDefault())
+                    .startsWith("com.twitter")
+            ) {
                 intent.setPackage(info.activityInfo.packageName)
             }
         }
@@ -1535,7 +1537,7 @@ object MyUtils {
         val df = nf as DecimalFormat
         df.applyPattern("#0.00")
         number = if (number != null && number.isNotEmpty()) number else "0"
-        return "" + df.format(java.lang.Double.parseDouble(number))
+        return "" + df.format(java.lang.Double.parseDouble(number)).replace(",", ".")
     }
 
     /**
@@ -1551,6 +1553,7 @@ object MyUtils {
         df.applyPattern("#0.0")
         number = if (number != null && number.isNotEmpty()) number else "0"
         return "" + DecimalFormat("#0.0").format(java.lang.Double.parseDouble(number))
+            .replace(",", ".")
     }
 
     /**

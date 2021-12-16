@@ -67,7 +67,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.17'
+    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.18'
 }
 ```
 
@@ -83,7 +83,7 @@ Or Maven:
 <dependency>
     <groupId>com.github.DawinderGill</groupId>
     <artifactId>DawinderUtils-Lib</artifactId>
-    <version>1.17</version>
+    <version>1.18</version>
 </dependency>
 ```
 
@@ -349,5 +349,5 @@ MyImagePicker.selectImage(mContext,
 
 Developer
 ---------
-**Dawinder Singh**
+**Dawinder Singh Gill**
 --------------
