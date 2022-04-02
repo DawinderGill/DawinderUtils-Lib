@@ -1522,7 +1522,8 @@ object MyUtils {
      */
     @SuppressLint("HardwareIds")
     fun getUniqueAndroidID(mContext: Context): String {
-        return Settings.Secure.getString(mContext.contentResolver, Settings.Secure.ANDROID_ID)
+        //return Settings.Secure.getString(mContext.contentResolver, Settings.Secure.ANDROID_ID)
+        return "0"
     }
 
     /**
