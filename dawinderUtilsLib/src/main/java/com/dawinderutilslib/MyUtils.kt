@@ -1520,10 +1520,9 @@ object MyUtils {
      * @param mContext Context of Activity or Fragment
      * @return String Android ID
      */
-    //@SuppressLint("HardwareIds")
+    @SuppressLint("HardwareIds")
     fun getUniqueAndroidID(mContext: Context): String {
-        //return Settings.Secure.getString(mContext.contentResolver, Settings.Secure.ANDROID_ID)
-        return "0"
+        return Settings.Secure.getString(mContext.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
     /**
