@@ -7,6 +7,8 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dawinderutilslib.MyUtils
@@ -25,9 +27,15 @@ object MyLocationPicker {
     private const val REQUEST_CODE_LOCATION = 8001
     private var locationManager: LocationManager? = null
     private lateinit var listener: OnLocationPick
+    private lateinit var activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
 
-    fun getCurrentLocation(mContext: Context, listener: OnLocationPick) {
+    fun getCurrentLocation(
+        mContext: Context,
+        activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>,
+        listener: OnLocationPick
+    ) {
         this.listener = listener
+        this.activityResultLauncher = activityResultLauncher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(
                     mContext,
@@ -79,7 +87,6 @@ object MyLocationPicker {
         val mLocationRequest = LocationRequest.create()
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(mLocationRequest)
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         val client = LocationServices.getSettingsClient(mContext)
         val task = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener(
@@ -90,6 +97,9 @@ object MyLocationPicker {
                 CommonStatusCodes.RESOLUTION_REQUIRED -> try {
                     val resolvable = e as ResolvableApiException
                     resolvable.startResolutionForResult(mContext, REQUEST_CODE_LOCATION)
+                    activityResultLauncher.launch(
+                        IntentSenderRequest.Builder(resolvable.resolution).build()
+                    )
                 } catch (e: Exception) {
                     MyUtils.showToast(
                         mContext,
@@ -99,21 +109,18 @@ object MyLocationPicker {
 
                 LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
                     MyUtils.showToast(
-                        mContext,
-                        mContext.getString(R.string.location_setting_unavailable)
+                        mContext, mContext.getString(R.string.location_setting_unavailable)
                     )
                 }
             }
         }
     }
 
-    fun onActivityResult(mContext: Context, requestCode: Int, resultCode: Int) {
-        if (requestCode == REQUEST_CODE_LOCATION) {
-            if (resultCode == Activity.RESULT_OK) {
-                getLocation(mContext)
-            } else {
-                MyUtils.showToast(mContext, mContext.getString(R.string.turn_on_gps))
-            }
+    fun onActivityResult(mContext: Context, resultCode: Int) {
+        if (resultCode == Activity.RESULT_OK) {
+            getLocation(mContext)
+        } else {
+            MyUtils.showToast(mContext, mContext.getString(R.string.turn_on_gps))
         }
     }
 
@@ -125,8 +132,5 @@ object MyLocationPicker {
         } else {
             MyUtils.showToast(mContext, mContext.getString(R.string.failed_to_get_location))
         }
-        /*Handler().postDelayed({
-
-        }, 2500)*/
     }
 }

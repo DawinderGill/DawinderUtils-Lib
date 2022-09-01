@@ -11,6 +11,7 @@ class MyWebViewClient(private val mDialog: ProgressBar) : WebViewClient() {
         mDialog.visibility = View.VISIBLE
     }
 
+    @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
         view.loadUrl(url)
         return true

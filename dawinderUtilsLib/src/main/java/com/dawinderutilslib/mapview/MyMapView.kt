@@ -19,7 +19,7 @@ class MyMapView : SupportMapFragment() {
         inflater: LayoutInflater,
         parent: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val layout = super.onCreateView(inflater, parent, savedInstanceState)
         val frameLayout = TouchableWrapper(this.requireActivity())
         frameLayout.setBackgroundColor(
@@ -28,7 +28,7 @@ class MyMapView : SupportMapFragment() {
                 android.R.color.transparent
             )
         )
-        (Objects.requireNonNull<View>(layout) as ViewGroup).addView(
+        (Objects.requireNonNull(layout) as ViewGroup).addView(
             frameLayout,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

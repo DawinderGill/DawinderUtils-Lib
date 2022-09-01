@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,19 +23,27 @@ import com.dawinderutilslib.pickers.MyPermissionChecker
 import com.dawinderutilslib.piechart.MyPieHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.myutilslibtest.R
 import com.myutilslibtest.adapters.ViewPagerAdapter
 import com.myutilslibtest.databinding.ActivityMainBinding
-import java.util.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mContext: Context
     private lateinit var binding: ActivityMainBinding
+
+    var activityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            MyImagePicker.onActivityResult(mContext, result.resultCode, result.data)
+        }
+
+    var activityResultLauncherLocation =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            MyLocationPicker.onActivityResult(mContext, result.resultCode)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,24 +74,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 })
         }
         binding.btLocation.setOnClickListener {
-            MyLocationPicker.getCurrentLocation(mContext, object : OnLocationPick {
-                override fun onLocationPick(latitude: Double, longitude: Double) {
-                    MyUtils.showToast(
-                        mContext,
-                        "Latitude : $latitude, Longitude : $longitude"
-                    )
-                }
-            })
+            MyLocationPicker.getCurrentLocation(
+                mContext,
+                activityResultLauncherLocation,
+                object : OnLocationPick {
+                    override fun onLocationPick(latitude: Double, longitude: Double) {
+                        MyUtils.showToast(
+                            mContext,
+                            "Latitude : $latitude, Longitude : $longitude"
+                        )
+                    }
+                })
         }
         binding.btImage.setOnClickListener {
-            MyImagePicker.selectImage(mContext, object : OnImagePick {
+            MyImagePicker.selectImage(mContext, activityResultLauncher, object : OnImagePick {
                 override fun onImagePick(path: String) {
                     MyUtils.showToast(mContext, "Image path : $path")
                 }
             })
         }
 
-        MyUtils.showMessageDialog(mContext,"test","message",null)
+        MyUtils.showMessageDialog(mContext, "test", "message", null)
     }
 
     private fun setPieChart() {
@@ -126,7 +138,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.scrollView.requestDisallowInterceptTouchEvent(true)
             }
         })
-        mSupportMapFragment.getMapAsync(this)
+        mSupportMapFragment.getMapAsync { mMap -> onMapReadyWork(mMap) }
     }
 
     private fun setViewPager() {
@@ -144,7 +156,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
     }
 
-    override fun onMapReady(mMap: GoogleMap?) {
+    private fun onMapReadyWork(mMap: GoogleMap?) {
         val loc = LatLng(30.946549, 74.843051)
         val position = CameraPosition.Builder().target(loc).zoom(12f).bearing(18f).tilt(30f).build()
         mMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position))
@@ -158,26 +170,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         MyPermissionChecker.onRequestPermissionsResult(
-            mContext,
-            requestCode,
-            permissions,
-            grantResults
+            mContext, requestCode, permissions, grantResults
         )
         MyImagePicker.onRequestPermissionsResult(
-            mContext,
-            requestCode,
-            grantResults
+            mContext, requestCode, grantResults
         )
         MyLocationPicker.onRequestPermissionsResult(
-            mContext,
-            requestCode,
-            grantResults
+            mContext, requestCode, grantResults
         )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        MyImagePicker.onActivityResult(mContext, requestCode, resultCode, data)
-        MyLocationPicker.onActivityResult(mContext, requestCode, resultCode)
     }
 }

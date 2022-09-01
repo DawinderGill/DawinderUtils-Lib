@@ -7,7 +7,6 @@
 package com.dawinderutilslib
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -32,10 +31,6 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.Settings
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
 import android.text.*
 import android.text.format.DateUtils
 import android.text.style.UnderlineSpan
@@ -300,7 +295,7 @@ object MyUtils {
      * @param mLong    Longitude
      */
     fun intentToMap(mContext: Context, title: String, mLat: String, mLong: String) {
-        val label = if (title.isEmpty()) mContext.getString(R.string.app_name) else title
+        val label = title.ifEmpty { mContext.getString(R.string.app_name) }
         val uriBegin = "geo:$mLat,$mLong"
         val query = "$mLat,$mLong($label)"
         val encodedQuery = Uri.encode(query)
@@ -990,41 +985,6 @@ object MyUtils {
         return random.nextInt(999999999 - 100000000) + 100000000
     }
 
-    /**
-     * Convert simple Bitmap to Blur Bitmap
-     *
-     * @param context     Activity or Fragment Context
-     * @param imgBitmap Bitmap of image that you want to make blur
-     * @param radius      Blur radius(Radius must be in between 0 and 25 otherwise it gives exception)
-     * @return Blur Bitmap
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    fun blurRenderScript(context: Context, imgBitmap: Bitmap, radius: Int): Bitmap {
-        var smallBitmap = imgBitmap
-        try {
-            smallBitmap = RGB565toARGB888(smallBitmap)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        val bitmap =
-            Bitmap.createBitmap(smallBitmap.width, smallBitmap.height, Bitmap.Config.ARGB_8888)
-
-        val renderScript = RenderScript.create(context)
-        val blurInput = Allocation.createFromBitmap(renderScript, smallBitmap)
-        val blurOutput = Allocation.createFromBitmap(renderScript, bitmap)
-
-        val blur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
-        blur.setInput(blurInput)
-        blur.setRadius(radius.toFloat()) // radius must be 0 < r <= 25
-        blur.forEach(blurOutput)
-
-        blurOutput.copyTo(bitmap)
-        renderScript.destroy()
-
-        return bitmap
-    }
-
     private fun RGB565toARGB888(img: Bitmap): Bitmap {
         val numPixels = img.width * img.height
         val pixels = IntArray(numPixels)
@@ -1045,7 +1005,6 @@ object MyUtils {
      * @return String path of file
      */
     @Suppress("DEPRECATION")
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @SuppressLint("NewApi")
     fun getRealPathFromURI(mContext: Context, uri: Uri): String? {
         @SuppressLint("ObsoleteSdkInt") val isKitKat =
@@ -1219,7 +1178,7 @@ object MyUtils {
         // Narrow down to official Twitter app, if available:
         val matches = mContext.packageManager.queryIntentActivities(intent, 0)
         for (info in matches) {
-            if (info.activityInfo.packageName.toLowerCase(Locale.getDefault())
+            if (info.activityInfo.packageName.lowercase(Locale.getDefault())
                     .startsWith("com.twitter")
             ) {
                 intent.setPackage(info.activityInfo.packageName)
@@ -1587,7 +1546,7 @@ object MyUtils {
         return if (text == "") {
             ""
         } else {
-            text.substring(0, 1).toUpperCase(Locale.getDefault()) + text.substring(1)
+            text.substring(0, 1).lowercase(Locale.getDefault()) + text.substring(1)
         }
     }
 
@@ -1747,14 +1706,12 @@ object MyUtils {
      * @param drawableResId Drawable
      */
     fun setStatusBarDrawable(activity: Activity, drawableResId: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
-            val background = ContextCompat.getDrawable(activity, drawableResId)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor =
-                ContextCompat.getColor(activity, android.R.color.transparent)
-            window.setBackgroundDrawable(background)
-        }
+        val window = activity.window
+        val background = ContextCompat.getDrawable(activity, drawableResId)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor =
+            ContextCompat.getColor(activity, android.R.color.transparent)
+        window.setBackgroundDrawable(background)
     }
 
     /**

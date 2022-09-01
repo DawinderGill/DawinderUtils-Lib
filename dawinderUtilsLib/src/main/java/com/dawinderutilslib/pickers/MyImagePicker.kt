@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -24,9 +25,11 @@ object MyImagePicker {
     private var cameraClickPath = ""
     private const val REQUEST_CODE_GALLERY = 1001
     private const val REQUEST_CODE_CAMERA = 1002
+    private var REQUEST_CODE_SELECTED = 0
     private lateinit var listener: OnImagePick
     private var isGallery: Boolean = true
     private var isCamera: Boolean = true
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     object dialogListener : OnDialogOptionSelected {
         override fun onDialogOptionSelected(mContext: Context, isGallery: Boolean) {
@@ -46,9 +49,13 @@ object MyImagePicker {
     }
 
     @SuppressLint("NewApi")
-    fun selectImage(mContext: Context, listener: OnImagePick) {
+    fun selectImage(
+        mContext: Context,
+        activityResultLauncher: ActivityResultLauncher<Intent>,
+        listener: OnImagePick
+    ) {
         this.listener = listener
-
+        this.activityResultLauncher = activityResultLauncher
         if ((isCamera && isGallery) || (!isCamera && !isGallery)) {
             val dialog = ImagePickerDialog()
             dialog.setData(mContext, dialogListener)
@@ -56,7 +63,7 @@ object MyImagePicker {
         } else if (isCamera) {
             gotoCamera(mContext)
         } else {
-            gotoGallery(mContext)
+            gotoGallery()
         }
     }
 
@@ -72,10 +79,10 @@ object MyImagePicker {
                     REQUEST_CODE_GALLERY
                 )
             } else {
-                gotoGallery(mContext)
+                gotoGallery()
             }
         } else {
-            gotoGallery(mContext)
+            gotoGallery()
         }
     }
 
@@ -111,7 +118,7 @@ object MyImagePicker {
     ) {
         if (requestCode == REQUEST_CODE_GALLERY) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                gotoGallery(mContext)
+                gotoGallery()
             } else {
                 MyUtils.showToast(
                     mContext,
@@ -139,13 +146,11 @@ object MyImagePicker {
     }
 
     @SuppressLint("IntentReset")
-    private fun gotoGallery(mContext: Context) {
+    private fun gotoGallery() {
+        REQUEST_CODE_SELECTED = REQUEST_CODE_GALLERY
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
-        (mContext as AppCompatActivity).startActivityForResult(
-            Intent.createChooser(intent, "Go To : "),
-            REQUEST_CODE_GALLERY
-        )
+        activityResultLauncher.launch(intent)
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -154,14 +159,12 @@ object MyImagePicker {
         if (takePictureIntent.resolveActivity(mContext.packageManager) != null) {
             val photoFile: File?
             try {
+                REQUEST_CODE_SELECTED = REQUEST_CODE_CAMERA
                 photoFile = createImageFile(mContext)
                 val photoURI =
                     FileProvider.getUriForFile(mContext, mContext.packageName, photoFile)
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                (mContext as AppCompatActivity).startActivityForResult(
-                    takePictureIntent,
-                    REQUEST_CODE_CAMERA
-                )
+                activityResultLauncher.launch(takePictureIntent)
             } catch (ex: Exception) {
                 MyUtils.showLog("Ex : " + ex.message)
                 MyUtils.showToast(
@@ -180,8 +183,8 @@ object MyImagePicker {
         return image
     }
 
-    fun onActivityResult(mContext: Context, requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_GALLERY) {
+    fun onActivityResult(mContext: Context, resultCode: Int, data: Intent?) {
+        if (REQUEST_CODE_SELECTED == REQUEST_CODE_GALLERY) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 val chosenImageUri = data.data
                 try {
@@ -203,7 +206,7 @@ object MyImagePicker {
             }
         }
 
-        if (requestCode == REQUEST_CODE_CAMERA) {
+        if (REQUEST_CODE_SELECTED == REQUEST_CODE_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
                 listener.onImagePick(cameraClickPath)
             } else {
