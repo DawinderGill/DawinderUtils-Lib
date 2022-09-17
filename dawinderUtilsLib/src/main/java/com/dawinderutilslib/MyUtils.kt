@@ -1163,7 +1163,7 @@ object MyUtils {
             .into(imageView)
     }
 
-    /**
+    /*/**
      * To share any text on Twitter
      *
      * @param mContext  Context of Activity or Fragment
@@ -1185,7 +1185,7 @@ object MyUtils {
             }
         }
         mContext.startActivity(Intent.createChooser(intent, "Go To : "))
-    }
+    }*/
 
     /**
      * To share any text with image on Instagram

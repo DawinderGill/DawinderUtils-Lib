@@ -1,4 +1,5 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "PropertyName", "PrivatePropertyName",
+@file:Suppress(
+    "MemberVisibilityCanBePrivate", "PropertyName", "PrivatePropertyName",
     "UNCHECKED_CAST", "unused", "ThrowableNotThrown", "UNREACHABLE_CODE", "ProtectedInFinal"
 )
 
@@ -33,6 +34,7 @@ class MyRangeSeekBar<T : Number> : AppCompatImageView {
      * Default color of a [MyRangeSeekBar], #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
      */
     val ACTIVE_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5)
+
     /**
      * An invalid pointer id.
      */
@@ -170,8 +172,10 @@ class MyRangeSeekBar<T : Number> : AppCompatImageView {
             thumbShadowBlur = defaultShadowBlur
             activateOnDefaultValues = false
         } else {
-            val a = getContext().obtainStyledAttributes(attrs,
-                R.styleable.MyRangeSeekBar, 0, 0)
+            val a = getContext().obtainStyledAttributes(
+                attrs,
+                R.styleable.MyRangeSeekBar, 0, 0
+            )
             try {
                 setRangeValues(
                     extractNumericValueFromAttributes(
@@ -748,9 +752,9 @@ class MyRangeSeekBar<T : Number> : AppCompatImageView {
     /**
      * Overridden to restore instance state when device orientation changes. This method is called automatically if you assign an id to the MyRangeSeekBar widget using the [.setId] method.
      */
-    override fun onRestoreInstanceState(parcel: Parcelable) {
-        val bundle = parcel as Bundle
-        super.onRestoreInstanceState(bundle.getParcelable("SUPER"))
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val bundle = state as Bundle
+        super.onRestoreInstanceState(state)
         normalizedMinValue = bundle.getDouble("MIN")
         normalizedMaxValue = bundle.getDouble("MAX")
     }
