@@ -152,7 +152,7 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     }
 
     override fun onScroll(
-        e1: MotionEvent,
+        e1: MotionEvent?,
         e2: MotionEvent,
         distanceX: Float,
         distanceY: Float
@@ -165,7 +165,7 @@ class MyZoomImageView : AppCompatImageView, GestureDetector.OnGestureListener,
     }
 
     override fun onFling(
-        e1: MotionEvent,
+        e1: MotionEvent?,
         e2: MotionEvent,
         velocityX: Float,
         velocityY: Float

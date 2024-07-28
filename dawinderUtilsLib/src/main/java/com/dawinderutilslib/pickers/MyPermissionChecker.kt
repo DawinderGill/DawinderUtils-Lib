@@ -23,11 +23,7 @@ object MyPermissionChecker {
     ) {
         MyPermissionChecker.listener = listener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!isPermissionsGranted(
-                    mContext,
-                    permissions
-                )
-            ) {
+            if (!isPermissionsGranted(mContext, permissions)) {
                 (mContext as AppCompatActivity).requestPermissions(
                     permissions,
                     REQUEST_CODE_PERMISSION

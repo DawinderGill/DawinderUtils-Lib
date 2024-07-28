@@ -64,10 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.btPermission.setOnClickListener {
             MyPermissionChecker.getPermission(
                 mContext,
-                arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA
-                ), object : OnPermissionGranted {
+                arrayOf(Manifest.permission.CAMERA), object : OnPermissionGranted {
                     override fun onPermissionGranted() {
                         MyUtils.showToast(mContext, "All permissions granted.")
                     }

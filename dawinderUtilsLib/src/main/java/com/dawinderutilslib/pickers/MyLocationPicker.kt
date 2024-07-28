@@ -21,6 +21,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.location.Priority
 
 object MyLocationPicker {
 
@@ -84,9 +85,11 @@ object MyLocationPicker {
     }
 
     private fun showSettingPopup(mContext: Context) {
-        val mLocationRequest = LocationRequest.create()
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, 10000
+        ).setMinUpdateIntervalMillis(5000).setMaxUpdates(10).build()
         val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(mLocationRequest)
+            .addLocationRequest(locationRequest)
         val client = LocationServices.getSettingsClient(mContext)
         val task = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener(

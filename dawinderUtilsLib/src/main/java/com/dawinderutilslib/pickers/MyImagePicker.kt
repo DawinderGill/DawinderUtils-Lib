@@ -1,6 +1,9 @@
 package com.dawinderutilslib.pickers
 
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.READ_MEDIA_IMAGES
+import android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -69,17 +72,20 @@ object MyImagePicker {
 
     private fun getGalleryPermission(mContext: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(
-                    mContext,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 (mContext as AppCompatActivity).requestPermissions(
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VISUAL_USER_SELECTED),
                     REQUEST_CODE_GALLERY
                 )
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                (mContext as AppCompatActivity).requestPermissions(
+                    arrayOf(READ_MEDIA_IMAGES), REQUEST_CODE_GALLERY
+                )
             } else {
-                gotoGallery()
+                (mContext as AppCompatActivity).requestPermissions(
+                    arrayOf(READ_EXTERNAL_STORAGE),
+                    REQUEST_CODE_GALLERY
+                )
             }
         } else {
             gotoGallery()
@@ -117,7 +123,9 @@ object MyImagePicker {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_GALLERY) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED)
+            ) {
                 gotoGallery()
             } else {
                 MyUtils.showToast(
