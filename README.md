@@ -67,7 +67,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.26'
+    implementation 'com.github.DawinderGill:DawinderUtils-Lib:1.27'
 }
 ```
 
@@ -83,7 +83,7 @@ Or Maven:
 <dependency>
     <groupId>com.github.DawinderGill</groupId>
     <artifactId>DawinderUtils-Lib</artifactId>
-    <version>1.26</version>
+    <version>1.27</version>
 </dependency>
 ```
 

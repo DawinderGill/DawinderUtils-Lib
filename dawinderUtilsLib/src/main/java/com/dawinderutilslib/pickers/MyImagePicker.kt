@@ -127,7 +127,7 @@ object MyImagePicker {
         }
         if (requestCode == REQUEST_CODE_CAMERA) {
             if (grantResults.isNotEmpty()) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     gotoCamera(mContext)
                 } else {
                     MyUtils.showToast(
