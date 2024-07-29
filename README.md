@@ -274,11 +274,11 @@ MyPermissionChecker.onRequestPermissionsResult(
     grantResults
 )
 
-2. Mention permissions while making call and you will get result in listener if all permissions granted. MAke sure you add these permissions in 'AndroidManifest.xml' file too.
+2. Mention permissions while making call and you will get result in listener if all permissions granted. Make sure you add these permissions in 'AndroidManifest.xml' file too.
 
 MyPermissionChecker.getPermission(
     mContext,
-    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA),
+    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA),
     object : OnPermissionGranted {
                 override fun onPermissionGranted() {
                     MyUtils.showToast(mContext, "All permissions granted.")

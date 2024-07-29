@@ -97,17 +97,10 @@ object MyImagePicker {
             if (ContextCompat.checkSelfPermission(
                     mContext,
                     Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                    mContext,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 (mContext as AppCompatActivity).requestPermissions(
-                    arrayOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ),
-                    REQUEST_CODE_CAMERA
+                    arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA
                 )
             } else {
                 gotoCamera(mContext)
@@ -123,9 +116,7 @@ object MyImagePicker {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_GALLERY) {
-            if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
-                        grantResults[1] == PackageManager.PERMISSION_GRANTED)
-            ) {
+            if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 gotoGallery()
             } else {
                 MyUtils.showToast(
@@ -164,22 +155,17 @@ object MyImagePicker {
     @SuppressLint("QueryPermissionsNeeded")
     private fun gotoCamera(mContext: Context) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(mContext.packageManager) != null) {
-            val photoFile: File?
-            try {
-                REQUEST_CODE_SELECTED = REQUEST_CODE_CAMERA
-                photoFile = createImageFile(mContext)
-                val photoURI =
-                    FileProvider.getUriForFile(mContext, mContext.packageName, photoFile)
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                activityResultLauncher.launch(takePictureIntent)
-            } catch (ex: Exception) {
-                MyUtils.showLog("Ex : " + ex.message)
-                MyUtils.showToast(
-                    mContext,
-                    mContext.getString(R.string.failed_to_capture_image)
-                )
-            }
+        val photoFile: File?
+        try {
+            REQUEST_CODE_SELECTED = REQUEST_CODE_CAMERA
+            photoFile = createImageFile(mContext)
+            val photoURI =
+                FileProvider.getUriForFile(mContext, mContext.packageName, photoFile)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            activityResultLauncher.launch(takePictureIntent)
+        } catch (ex: Exception) {
+            MyUtils.showLog("Ex : " + ex.message)
+            MyUtils.showToast(mContext, mContext.getString(R.string.failed_to_capture_image))
         }
     }
 
